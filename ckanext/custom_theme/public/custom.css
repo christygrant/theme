@@ -1,0 +1,61 @@
+body {
+//    background: url('/bg.jpg') repeat-x #E3E4E6;;
+    background-color: #EBEBEB;
+    padding: 20px 0px 0px 0px;
+    font-family: "Lucida Grande", arial, helvetica, sans-serif;
+    font-size: 12px;
+    color: #163B69;
+    line-height: 1.5;
+}
+main {
+    width: 90%;
+    background-color: #fff;
+    min-height: 600px;
+    margin: auto;
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+footer {
+    width: 90%;
+    margin: auto;
+    padding: 1% 5%;
+}
+
+// NCAR theme overrides to CKAN
+
+.account-masthead {
+    background-color: #24487D; 
+    color: #E6E6E6
+margin-top: 15px;
+}
+
+.masthead {
+    background-color: #24487D; 
+    color: #FBEFF2;
+}
+
+// Text color of "Welcome to CKAN" and "Search data"
+.module-content {
+    background-color: #24487D;
+    color: #FFF;
+}
+
+/* Change the colors of the "Search Your Data" box to NCAR blue. */
+.homepage .module-search .module-content {
+  background-color: #24487D;
+}
+
+/* override tile background */
+.hero {
+//    background: url("bg.jpg");
+	background: none;
+}
+
+.site-footer
+{
+  background-color: #24487D;
+}
+
+
+
+
