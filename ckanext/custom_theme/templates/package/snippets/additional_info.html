@@ -1,0 +1,25 @@
+{% ckan_extends %}
+
+{% block extras %}
+
+    {% for extra in h.sorted_extras(pkg_dict.extras, auto_clean=True) %}
+      {% set key, value = extra %}
+
+        <tr rel="dc:relation" resource="_:extra{{ i }}">
+          <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
+
+          <td class="dataset-details" property="rdf:value">
+          {% if key == "Author" %}
+             {% for auth in value.split("|") %}
+                  {{ auth }}<br>
+             {% endfor %}
+          {% else %}
+              {{ value }}
+          {% endif %}
+          </td>
+        </tr>
+    {% endfor %}
+
+
+{% endblock %}
+
