@@ -54,8 +54,9 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
 	    roleString = party.findtext('gmd:role/gmd:CI_RoleCode', namespaces=ISO_NAMES)
             log.debug('roleString == "' + roleString + '"')
             if roleString.lower() == 'author':
-	        authorString += party.findtext('gmd:individualName/gco:CharacterString', namespaces=ISO_NAMES)
-	        authorString += '|'
+	        newString = party.findtext('gmd:individualName/gco:CharacterString', namespaces=ISO_NAMES)
+	        if newString: 
+	            authorString += newString + "|"
 
         if len(authorString) > 0:
             package_dict['extras'].append(
