@@ -9,7 +9,7 @@
           <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
 
           <td class="dataset-details" property="rdf:value">
-          {% if key == "Author" %}
+          {% if key == "Author1" %}
              {% for auth in value.split("|") %}
                   {{ auth }}<br>
              {% endfor %}
