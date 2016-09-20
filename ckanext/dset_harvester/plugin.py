@@ -7,33 +7,59 @@ from ckanext.spatial.interfaces import ISpatialHarvester
 
 # Debug
 import logging
-from pprint import pprint
+import pprint
 log = logging.getLogger(__name__)
-
-
-def str_undo(listString):
-    ''' This helper function converts a string version of a list back to a list.  
-    In other words: str_undo(str(list)) == list .
-    '''
-    log.debug("str_undo():  length of listString is " + str(len(listString)))
-    if isinstance(listString, basestring):
-        log.debug("str_undo():  listString  == " + listString)
-        convertedList = ast.literal_eval(listString)
-    else:
-        convertedList = listString
-    log.debug("str_undo():  length of list is " + str(len(convertedList)))
-    return convertedList
-
 
 ISO_NAMES = {'gmd': 'http://www.isotc211.org/2005/gmd',
              'xlink': 'http://www.w3.org/1999/xlink',
              'gco': 'http://www.isotc211.org/2005/gco',
              'gml': 'http://www.opengis.net/gml'}
 
+
+def getRoleNames(xml_tree, roleString, roleNameElement):
+    ''' Get names matching a specific ResponsibleParty role in a ISO XML document.
+    '''
+    roleNames = ''
+    authorPathXML = './/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode'
+    for roleCode in xml_tree.xpath(authorPathXML, namespaces=ISO_NAMES):
+        if roleCode.get('codeListValue') == roleString:
+            newName = roleCode.getparent().getparent().findtext(roleNameElement, namespaces=ISO_NAMES)
+            log.debug('role ' + roleString + ':  newName == "' + newName + '"')
+            if newName: 
+                roleNames += newName + "|"
+
+    if len(roleNames) > 0:
+        roleNames = roleNames[0:-1]
+    else:
+        roleNames = ' '
+    return roleNames
+
+
+def getDataCiteResourceTypes(xml_tree):
+    ''' Add resource type fields by searching the ISO XML for keywords with thesaurus containing "DataCite". 
+    '''
+    thesaurusPath = './/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:thesaurusName'
+    keywordPath = './/gmd:keyword/gco:CharacterString'
+    resourceTypes = ''
+    for thesaurus in xml_tree.xpath(thesaurusPath, namespaces=ISO_NAMES):
+        if "DataCite" in thesaurus.findtext('gmd:CI_Citation/gmd:title/gco:CharacterString', namespaces=ISO_NAMES):
+            md_keywords = thesaurus.getparent()
+            for keyword in md_keywords.xpath(keywordPath, namespaces=ISO_NAMES):
+                newResourceType = keyword.text
+                log.debug('newResourceType == "' + newResourceType + '"')
+                if newResourceType:
+                    resourceTypes += newResourceType + "|"
+
+    if len(resourceTypes) > 0:
+        resourceTypes = resourceTypes[0:-1]
+    else:
+        resourceTypes = ' '
+    return resourceTypes
+
+
 class Dset_HarvesterPlugin(p.SingletonPlugin):
     p.implements(ISpatialHarvester, inherit=True)
     p.implements(p.IConfigurer)
-    p.implements(p.ITemplateHelpers)
 
     # ISpatialHarvester
 
@@ -47,25 +73,21 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
             {'key': 'topic-category', 'value': iso_values.get('topic-category')}
         )
 	
-        # Add Authors by searching the ISO XML for "cited responsible parties" with an "author" role. 
-	authorString = ''
-        authorPathXML = './/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty'
-        for party in xml_tree.xpath(authorPathXML, namespaces=ISO_NAMES):
-	    roleString = party.findtext('gmd:role/gmd:CI_RoleCode', namespaces=ISO_NAMES)
-            log.debug('roleString == "' + roleString + '"')
-            if roleString.lower() == 'author':
-	        newString = party.findtext('gmd:individualName/gco:CharacterString', namespaces=ISO_NAMES)
-	        if newString: 
-	            authorString += newString + "|"
+        # Add author field
+	authorString = getRoleNames(xml_tree, 'author', 'gmd:individualName/gco:CharacterString')
+        package_dict['extras'].append({'key': 'author1', 'value': authorString})
 
-        if len(authorString) > 0:
-            package_dict['extras'].append(
-                {'key': 'author1', 'value': authorString[0:-1]}
-            )
-        else:
-            package_dict['extras'].append(
-                {'key': 'author1', 'value': ' '}
-            )
+        # Examine iso_values if there are authors, just to get a better idea of harvester behavior.
+	if len(authorString) > 1:
+            log.debug(pprint.pformat(iso_values))
+	
+        # Add publisher field
+	publisherString = getRoleNames(xml_tree, 'publisher', 'gmd:organisationName/gco:CharacterString')
+        package_dict['extras'].append({'key': 'publisher', 'value': publisherString})
+	
+        # Add DataCite Resource Type field
+	resourceTypeString = getDataCiteResourceTypes(xml_tree)
+        package_dict['extras'].append({'key': 'datacite-resource-type', 'value': resourceTypeString})
 	
         return package_dict
 
@@ -76,12 +98,3 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         toolkit.add_public_directory(config_, 'public')
         toolkit.add_resource('fanstatic', 'dset_harvester')
 
-
-    # ITemplateHelpers
-    def get_helpers(self):
-        ''' Register str_undo() as a template helper function.
-        '''
-        # Template helper function names should begin with the name of the
-        # extension they belong to, to avoid clashing with functions from
-        # other extensions.
-        return {'dset_harvester_str_undo': str_undo}
