@@ -9,7 +9,17 @@
           <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
 
           <td class="dataset-details" property="rdf:value">
-          {% if key == "Author1" or key == "Publisher" or key == "Datacite Resource Type" %}
+          {% if key == "Author1" %}
+             {% set authors = h.get_pkg_dict_extra(pkg_dict, 'author1') %}
+             {% for name in h.string_to_json(authors)  %}
+                  {{ name }}<br>
+             {% endfor %}
+          {% elif key == "Publisher" %}
+             {% set publishers = h.get_pkg_dict_extra(pkg_dict, 'publisher') %}
+             {% for name in h.string_to_json(publishers)  %}
+                  {{ name }}<br>
+             {% endfor %}
+          {% elif key == "Datacite Resource Type" %}
              {% for name in value.split("|") %}
                   {{ name }}<br>
              {% endfor %}
