@@ -1,9 +1,12 @@
 import ckan.plugins as p
 import ckan.plugins.toolkit as toolkit
 import ast
+import json
 
 
 from ckanext.spatial.interfaces import ISpatialHarvester
+import ckanext.dset_harvester.helpers as helpers
+
 
 # Debug
 import logging
@@ -19,19 +22,17 @@ ISO_NAMES = {'gmd': 'http://www.isotc211.org/2005/gmd',
 def getNamesByRole(xml_tree, roleString, roleNameElement):
     ''' Get names matching a specific ResponsibleParty role in a ISO XML document.
     '''
-    roleNames = ''
+    roleNames = []
     authorPathXML = './/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode'
     for roleCode in xml_tree.xpath(authorPathXML, namespaces=ISO_NAMES):
         if roleCode.get('codeListValue') == roleString:
             newName = roleCode.getparent().getparent().findtext(roleNameElement, namespaces=ISO_NAMES)
             if newName: 
                 log.debug('role ' + roleString + ':  newName == "' + newName + '"')
-                roleNames += newName + "|"
+                roleNames.append(newName)
 
-    if len(roleNames) > 0:
-        roleNames = roleNames[0:-1]
-    else:
-        roleNames = ' '
+    if len(roleNames) == 0:
+        roleNames.append('None')
     return roleNames
 
 
@@ -60,6 +61,7 @@ def getDataCiteResourceTypes(xml_tree):
 class Dset_HarvesterPlugin(p.SingletonPlugin):
     p.implements(ISpatialHarvester, inherit=True)
     p.implements(p.IConfigurer)
+    p.implements(p.ITemplateHelpers)
 
     # ISpatialHarvester
 
@@ -74,7 +76,8 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         )
 	
         # Add author field
-	authorString = getNamesByRole(xml_tree, 'author', 'gmd:individualName/gco:CharacterString')
+	authorList = getNamesByRole(xml_tree, 'author', 'gmd:individualName/gco:CharacterString')
+        authorString = json.dumps(authorList)
         package_dict['extras'].append({'key': 'author1', 'value': authorString})
 
         # Examine iso_values if there are authors, just to get a better idea of harvester data structures.
@@ -84,7 +87,8 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
             log.debug("END iso_values print.")
 	
         # Add publisher field
-	publisherString = getNamesByRole(xml_tree, 'publisher', 'gmd:organisationName/gco:CharacterString')
+	publisherList = getNamesByRole(xml_tree, 'publisher', 'gmd:organisationName/gco:CharacterString')
+        publisherString = json.dumps(publisherList)
         package_dict['extras'].append({'key': 'publisher', 'value': publisherString})
 	
         # Add DataCite Resource Type field
@@ -96,6 +100,13 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         package_dict['extras'].append({'key': 'harvested_object_id', 'value': harvest_object.id})
         package_dict['extras'].append({'key': 'harvester_source_id', 'value': harvest_object.harvest_source_id})
         package_dict['extras'].append({'key': 'harvester_source_title', 'value': harvest_object.source.title})
+
+        # Dump some fields returned as lists as JSON
+        for key in ('dataset-reference-date',):
+            for extra in package_dict['extras']:
+                if extra['key'] == key:
+                    extra['value'] = json.dumps(extra['value'])
+
 	
         log.debug("START data_dict print:")
         log.debug(pprint.pformat(data_dict))
@@ -109,3 +120,21 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         toolkit.add_public_directory(config_, 'public')
         toolkit.add_resource('fanstatic', 'dset_harvester')
 
+   # ITemplateHelpers
+
+    def get_helpers(self):
+
+        function_names = (
+            'string_to_json',
+            'get_publication_date',
+        )
+        return _get_module_functions(helpers, function_names)
+
+
+
+def _get_module_functions(module, function_names):
+    functions = {}
+    for f in function_names:
+        functions[f] = module.__dict__[f]
+
+    return functions
