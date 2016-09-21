@@ -76,15 +76,7 @@
 
           <tr rel="dc:relation" resource="_:extra{{ i }}">
 
-          {% if key == "Author1" %}
-             <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
-               <td class="dataset-details" property="rdf:value">
-                 {% set authors = h.get_pkg_dict_extra(pkg_dict, 'author1') %}
-                 {% for name in h.string_to_json(authors)  %}
-                  {{ name }}<br>
-             {% endfor %}
-               </td>
-          {% elif key == "Publisher" %}
+          {% if key == "Publisher" %}
              <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
                <td class="dataset-details" property="rdf:value">
              {% set publishers = h.get_pkg_dict_extra(pkg_dict, 'publisher') %}
