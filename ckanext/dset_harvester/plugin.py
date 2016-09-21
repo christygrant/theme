@@ -79,7 +79,9 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
 
         # Examine iso_values if there are authors, just to get a better idea of harvester behavior.
 	if len(authorString) > 1:
+            log.debug("START iso_values print:")
             log.debug(pprint.pformat(iso_values))
+            log.debug("END iso_values print.")
 	
         # Add publisher field
 	publisherString = getRoleNames(xml_tree, 'publisher', 'gmd:organisationName/gco:CharacterString')
@@ -89,6 +91,13 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
 	resourceTypeString = getDataCiteResourceTypes(xml_tree)
         package_dict['extras'].append({'key': 'datacite-resource-type', 'value': resourceTypeString})
 	
+        # Add Harvest Object Id
+	harvest_object_id = data_dict['harvest_object'].id
+        package_dict['extras'].append({'key': 'harvest_object_id', 'value': harvest_object_id})
+	
+        log.debug("START data_dict print:")
+        log.debug(pprint.pformat(data_dict))
+        log.debug("END data_dict print.")
         return package_dict
 
     # IConfigurer
