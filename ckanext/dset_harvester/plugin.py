@@ -76,7 +76,7 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         # Add author field
 	authorList = getNamesByRole(xml_tree, 'author', 'gmd:individualName/gco:CharacterString')
         authorString = json.dumps(authorList)
-        package_dict['extras'].append({'key': 'author1', 'value': authorString})
+        package_dict['author'] = authorString
 
         # Examine iso_values if there are authors, just to get a better idea of harvester data structures.
 	if len(authorString) > 1:
@@ -89,7 +89,7 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         publisherString = json.dumps(publisherList)
         package_dict['extras'].append({'key': 'publisher', 'value': publisherString})
 	
-        # Add DataCite Resource Type field
+        # Override CKAN resource type with DataCite ResourceType keywords list
 	resourceTypeList = getDataCiteResourceTypes(xml_tree)
         resourceTypeString = json.dumps(resourceTypeList)
         package_dict['extras'].append({'key': 'datacite-resource-type', 'value': resourceTypeString})
