@@ -71,7 +71,8 @@
 
       {% block extras scoped %}
 
-        {% for extra in h.sorted_extras(pkg_dict.extras, auto_clean=True) %}
+        {% set suppress_fields = ['resource-type', 'spatial_harvester'] %}
+        {% for extra in h.sorted_extras(pkg_dict.extras, auto_clean=True, exclude=suppress_fields) %}
           {% set key, value = extra %}
 
           <tr rel="dc:relation" resource="_:extra{{ i }}">
