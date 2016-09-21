@@ -32,7 +32,7 @@ def getNamesByRole(xml_tree, roleString, roleNameElement):
                 roleNames.append(newName)
 
     if len(roleNames) == 0:
-        roleNames.append('None')
+        roleNames = [' ']
     return roleNames
 
 
@@ -41,7 +41,7 @@ def getDataCiteResourceTypes(xml_tree):
     '''
     thesaurusPath = './/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:thesaurusName'
     keywordPath = './/gmd:keyword/gco:CharacterString'
-    resourceTypes = ''
+    resourceTypes = []
     for thesaurus in xml_tree.xpath(thesaurusPath, namespaces=ISO_NAMES):
         if "DataCite" in thesaurus.findtext('gmd:CI_Citation/gmd:title/gco:CharacterString', namespaces=ISO_NAMES):
             md_keywords = thesaurus.getparent()
@@ -49,12 +49,10 @@ def getDataCiteResourceTypes(xml_tree):
                 newResourceType = keyword.text
                 if newResourceType:
                     log.debug('newResourceType == "' + newResourceType + '"')
-                    resourceTypes += newResourceType + "|"
+                    resourceTypes.append(newResourceType)
 
-    if len(resourceTypes) > 0:
-        resourceTypes = resourceTypes[0:-1]
-    else:
-        resourceTypes = ' '
+    if len(resourceTypes) == 0:
+        resourceTypes = [' ']
     return resourceTypes
 
 
@@ -92,7 +90,8 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         package_dict['extras'].append({'key': 'publisher', 'value': publisherString})
 	
         # Add DataCite Resource Type field
-	resourceTypeString = getDataCiteResourceTypes(xml_tree)
+	resourceTypeList = getDataCiteResourceTypes(xml_tree)
+        resourceTypeString = json.dumps(resourceTypeList)
         package_dict['extras'].append({'key': 'datacite-resource-type', 'value': resourceTypeString})
 	
         # Add Harvester-related values
