@@ -16,7 +16,7 @@ ISO_NAMES = {'gmd': 'http://www.isotc211.org/2005/gmd',
              'gml': 'http://www.opengis.net/gml'}
 
 
-def getRoleNames(xml_tree, roleString, roleNameElement):
+def getNamesByRole(xml_tree, roleString, roleNameElement):
     ''' Get names matching a specific ResponsibleParty role in a ISO XML document.
     '''
     roleNames = ''
@@ -74,7 +74,7 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         )
 	
         # Add author field
-	authorString = getRoleNames(xml_tree, 'author', 'gmd:individualName/gco:CharacterString')
+	authorString = getNamesByRole(xml_tree, 'author', 'gmd:individualName/gco:CharacterString')
         package_dict['extras'].append({'key': 'author1', 'value': authorString})
 
         # Examine iso_values if there are authors, just to get a better idea of harvester data structures.
@@ -84,7 +84,7 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
             log.debug("END iso_values print.")
 	
         # Add publisher field
-	publisherString = getRoleNames(xml_tree, 'publisher', 'gmd:organisationName/gco:CharacterString')
+	publisherString = getNamesByRole(xml_tree, 'publisher', 'gmd:organisationName/gco:CharacterString')
         package_dict['extras'].append({'key': 'publisher', 'value': publisherString})
 	
         # Add DataCite Resource Type field
