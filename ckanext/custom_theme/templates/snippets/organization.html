@@ -1,0 +1,9 @@
+{% ckan_extends %}
+
+      {% block image %}
+        <div class="image">
+          <a href="{{ url }}">
+            <img src="{{ organization.image_display_url or h.url_for_static('ncar-logo-spellout-med.jpg') }}" width="200" alt="{{ organization.name }}" />
+          </a>
+        </div>
+      {% endblock %}
