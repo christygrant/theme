@@ -1,0 +1,6 @@
+{% ckan_extends %}
+
+{% block package_resources %}
+    {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
+    {% snippet "package/snippets/metadata_source_list.html", pkg=pkg %}
+{% endblock %}
