@@ -3,7 +3,7 @@
 ckanext-dset_harvester
 =============
 
-This plugin adds additional behavior to the CKAN spatial harvester.  It extracts additional information from ISO-19139 documents that matches meets the needs for searching NCAR digital assets.
+This plugin adds additional behavior to the CKAN spatial harvester.  It extracts additional information from ISO-19139 documents that is helpful for finding NCAR digital assets.
 
 ------------
 Requirements
