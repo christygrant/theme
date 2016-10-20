@@ -18,15 +18,12 @@ Installation
 
 To install ckanext-dset_harvester for development, activate your CKAN virtualenv and
 do::
-
     cd /usr/lib/ckan/default/src
     git clone https://github.com/bonnland/ckanext-dset_harvester.git
     cd ckanext-dset_harvester
     python setup.py develop
 
-
-Then add ``dset_harvester`` to the ``ckan.plugins`` setting in your CKAN
-   config file (``/etc/ckan/default/development.ini``).
+Then add ``dset_harvester`` to the ``ckan.plugins`` setting in your CKAN config file (``/etc/ckan/default/development.ini``).
 
 Then restart both CKAN and the harvesting queues. If you're running the queues using the "supervisor" service::
 
