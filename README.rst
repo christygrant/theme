@@ -28,8 +28,9 @@ do::
 Then add ``dset_harvester`` to the ``ckan.plugins`` setting in your CKAN
    config file (``/etc/ckan/default/development.ini``).
 
-Then restart the harvesting queues. If you're running the queues using the "supervisor" service::
+Then restart both CKAN and the harvesting queues. If you're running the queues using the "supervisor" service::
 
+     sudo systemctl restart httpd
      sudo systemctl restart supervisord
 
 You will have to re-harvest datasets in order to have the additional dataset attributes added or updated.
