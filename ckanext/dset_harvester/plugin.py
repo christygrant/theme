@@ -24,8 +24,8 @@ def getRoleNames(xml_tree, roleString, roleNameElement):
     for roleCode in xml_tree.xpath(authorPathXML, namespaces=ISO_NAMES):
         if roleCode.get('codeListValue') == roleString:
             newName = roleCode.getparent().getparent().findtext(roleNameElement, namespaces=ISO_NAMES)
-            log.debug('role ' + roleString + ':  newName == "' + newName + '"')
             if newName: 
+                log.debug('role ' + roleString + ':  newName == "' + newName + '"')
                 roleNames += newName + "|"
 
     if len(roleNames) > 0:
@@ -46,8 +46,8 @@ def getDataCiteResourceTypes(xml_tree):
             md_keywords = thesaurus.getparent()
             for keyword in md_keywords.xpath(keywordPath, namespaces=ISO_NAMES):
                 newResourceType = keyword.text
-                log.debug('newResourceType == "' + newResourceType + '"')
                 if newResourceType:
+                    log.debug('newResourceType == "' + newResourceType + '"')
                     resourceTypes += newResourceType + "|"
 
     if len(resourceTypes) > 0:
@@ -77,7 +77,7 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
 	authorString = getRoleNames(xml_tree, 'author', 'gmd:individualName/gco:CharacterString')
         package_dict['extras'].append({'key': 'author1', 'value': authorString})
 
-        # Examine iso_values if there are authors, just to get a better idea of harvester behavior.
+        # Examine iso_values if there are authors, just to get a better idea of harvester data structures.
 	if len(authorString) > 1:
             log.debug("START iso_values print:")
             log.debug(pprint.pformat(iso_values))
@@ -91,9 +91,11 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
 	resourceTypeString = getDataCiteResourceTypes(xml_tree)
         package_dict['extras'].append({'key': 'datacite-resource-type', 'value': resourceTypeString})
 	
-        # Add Harvest Object Id
-	harvest_object_id = data_dict['harvest_object'].id
-        package_dict['extras'].append({'key': 'harvest_object_id', 'value': harvest_object_id})
+        # Add Harvester-related values
+        harvest_object = data_dict['harvest_object']
+        package_dict['extras'].append({'key': 'harvested_object_id', 'value': harvest_object.id})
+        package_dict['extras'].append({'key': 'harvester_source_id', 'value': harvest_object.harvest_source_id})
+        package_dict['extras'].append({'key': 'harvester_source_title', 'value': harvest_object.source.title})
 	
         log.debug("START data_dict print:")
         log.debug(pprint.pformat(data_dict))
