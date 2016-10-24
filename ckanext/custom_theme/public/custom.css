@@ -56,8 +56,8 @@ margin-top: 15px;
   background-color: #24487D;
 }
 
-/*.format-label[data-format="ISO-19139"], .format-label[data-format*="ISO-19139"] { */
-.format-label {
+.format-label[data-format="ISO-19139"], .format-label[data-format*="ISO-19139"] { 
+/*.format-label { */
     background-position: 0 0;
     background-image: url(./icon-iso-19139.png);
 }
