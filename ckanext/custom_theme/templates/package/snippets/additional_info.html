@@ -5,29 +5,45 @@
     {% for extra in h.sorted_extras(pkg_dict.extras, auto_clean=True) %}
       {% set key, value = extra %}
 
-        <tr rel="dc:relation" resource="_:extra{{ i }}">
-          <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
+          <tr rel="dc:relation" resource="_:extra{{ i }}">
 
-          <td class="dataset-details" property="rdf:value">
           {% if key == "Author1" %}
-             {% set authors = h.get_pkg_dict_extra(pkg_dict, 'author1') %}
-             {% for name in h.string_to_json(authors)  %}
+             <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
+               <td class="dataset-details" property="rdf:value">
+                 {% set authors = h.get_pkg_dict_extra(pkg_dict, 'author1') %}
+                 {% for name in h.string_to_json(authors)  %}
                   {{ name }}<br>
              {% endfor %}
+               </td>
           {% elif key == "Publisher" %}
+             <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
+               <td class="dataset-details" property="rdf:value">
              {% set publishers = h.get_pkg_dict_extra(pkg_dict, 'publisher') %}
              {% for name in h.string_to_json(publishers)  %}
                   {{ name }}<br>
              {% endfor %}
+             </td>
           {% elif key == "Datacite Resource Type" %}
+             <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
+             <td class="dataset-details">
              {% for name in value.split("|") %}
                   {{ name }}<br>
              {% endfor %}
+             </td>
+          {% elif key == "Dataset Reference Date" %}
+             <th scope="row" class="dataset-label" property="rdfs:label">Publication Date</th>
+             <td class="dataset-details">
+             {% set dataset_reference_date = h.get_publication_date(pkg_dict) %}
+                  {{ h.render_datetime(dataset_reference_date) }}<br>
+             </td>
+           </tr>
           {% else %}
+             <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
+             <td class="dataset-details" property="rdf:value">
               {{ value }}
+             </td>
           {% endif %}
-          </td>
-        </tr>
+          </tr>
     {% endfor %}
 
 
