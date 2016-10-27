@@ -4,6 +4,11 @@ import ckan.plugins.toolkit as tk
 
 import json
 
+# Debug
+import logging
+import pprint
+log = logging.getLogger(__name__)
+
 def string_to_json(json_string):
     '''  Converts a string representation of a JSON object into that object
     '''
@@ -23,8 +28,10 @@ def get_publication_date(package):
     '''
     data_string = h.get_pkg_dict_extra(package, 'dataset-reference-date')
     data_list = json.loads(data_string)
+    log.debug("Data_list type = " + str(type(data_list)))
     pub_date = 'Not Found'
     for date_dict in data_list:
+        log.debug(pprint.pformat(date_dict))
         if date_dict['type'] == 'publication':
 	    pub_date = date_dict['value']
     return pub_date

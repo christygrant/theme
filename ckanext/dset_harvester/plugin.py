@@ -102,10 +102,10 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         package_dict['extras'].append({'key': 'harvester_source_title', 'value': harvest_object.source.title})
 
         # Dump some fields returned as lists as JSON
-        for key in ('dataset-reference-date',):
-            for extra in package_dict['extras']:
-                if extra['key'] == key:
-                    extra['value'] = json.dumps(extra['value'])
+        #for key in ('dataset-reference-date',):
+        #   for extra in package_dict['extras']:
+        #       if extra['key'] == key:
+        #           extra['value'] = json.dumps(extra['value'])
 
 	
         log.debug("START data_dict print:")
