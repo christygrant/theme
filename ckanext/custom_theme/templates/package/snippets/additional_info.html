@@ -37,6 +37,12 @@
                   {{ h.render_datetime(dataset_reference_date) }}<br>
              </td>
            </tr>
+          {% elif key == "Metadata Date" %}
+             <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
+             <td class="dataset-details">
+                  {{ h.render_datetime(value) }}<br>
+             </td>
+           </tr>
           {% else %}
              <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
              <td class="dataset-details" property="rdf:value">
