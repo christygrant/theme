@@ -91,6 +91,19 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         publisherString = json.dumps(publisherList)
         package_dict['extras'].append({'key': 'publisher', 'value': publisherString})
 	
+        # Add Resource Support Contact field
+        # TODO: is this single or multiple? Jira says single
+        isoPath = './/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString'
+	resourceSupportContactString = ""
+        for resourceName in xml_tree.xpath(isoPath, namespaces=ISO_NAMES):
+            log.debug(pprint.pformat(resourceName))
+	    resourceSupportContactString = resourceName.text
+        package_dict['extras'].append({'key': 'resource-support-contact', 'value': resourceSupportContactString})
+
+        #log.debug("START package_dict print:")
+        #log.debug(pprint.pformat(package_dict))
+        #log.debug("END package_dict print.")
+
         # Override CKAN resource type with DataCite ResourceType keywords list
 	resourceTypeList = getDataCiteResourceTypes(xml_tree)
         resourceTypeString = json.dumps(resourceTypeList)
@@ -109,9 +122,9 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         #           extra['value'] = json.dumps(extra['value'])
 
 	
-        log.debug("START data_dict print:")
-        log.debug(pprint.pformat(data_dict))
-        log.debug("END data_dict print.")
+        #log.debug("START data_dict print:")
+        #log.debug(pprint.pformat(data_dict))
+        #log.debug("END data_dict print.")
         return package_dict
 
     # IConfigurer
