@@ -23,8 +23,8 @@ def getNamesByRole(xml_tree, roleString, roleNameElement):
     ''' Get names matching a specific ResponsibleParty role in a ISO XML document.
     '''
     roleNames = []
-    authorPathXML = './/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode'
-    for roleCode in xml_tree.xpath(authorPathXML, namespaces=ISO_NAMES):
+    rolePathXML = './/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode'
+    for roleCode in xml_tree.xpath(rolePathXML, namespaces=ISO_NAMES):
         if roleCode.get('codeListValue') == roleString:
             newName = roleCode.getparent().getparent().findtext(roleNameElement, namespaces=ISO_NAMES)
             if newName: 
@@ -76,7 +76,9 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         # Add author field
 	authorList = getNamesByRole(xml_tree, 'author', 'gmd:individualName/gco:CharacterString')
         authorString = json.dumps(authorList)
-        package_dict['author'] = authorString
+        package_dict['extras'].append(
+            {'key': 'harvest-author', 'value': authorString}
+        )
 
         # Examine iso_values if there are authors, just to get a better idea of harvester data structures.
 	if len(authorString) > 1:
