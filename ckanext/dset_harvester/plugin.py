@@ -93,12 +93,18 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
 	
         # Add Resource Support Contact field
         # TODO: is this single or multiple? Jira says single
-        isoPath = './/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString'
+        resourceSupportIsoPath = './/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString'
 	resourceSupportContactString = ""
-        for resourceName in xml_tree.xpath(isoPath, namespaces=ISO_NAMES):
-            log.debug(pprint.pformat(resourceName))
+        for resourceName in xml_tree.xpath(resourceSupportIsoPath, namespaces=ISO_NAMES):
 	    resourceSupportContactString = resourceName.text
         package_dict['extras'].append({'key': 'resource-support-contact', 'value': resourceSupportContactString})
+
+        # Add Metadata Point of Contact field
+        pointOfContactIsoPath = './/gmd:contact/gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString'
+	pointOfContactString = ""
+        for contactName in xml_tree.xpath(pointOfContactIsoPath, namespaces=ISO_NAMES):
+	    pointOfContactString = contactName.text
+        package_dict['extras'].append({'key': 'metadata-point-of-contact', 'value': pointOfContactString})
 
         #log.debug("START package_dict print:")
         #log.debug(pprint.pformat(package_dict))
@@ -120,7 +126,6 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         #   for extra in package_dict['extras']:
         #       if extra['key'] == key:
         #           extra['value'] = json.dumps(extra['value'])
-
 	
         #log.debug("START data_dict print:")
         #log.debug(pprint.pformat(data_dict))
