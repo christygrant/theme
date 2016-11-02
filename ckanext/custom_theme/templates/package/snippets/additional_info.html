@@ -2,40 +2,31 @@
 
 {% block extras %}
 
-    {% set rename_fields = {'harvest-author':'Author', 'datacite-resource-type':'Resource Type'}  %}
-    {% set exclude_fields = ['resource-type', 'spatial_harvester'] %}
-    {% for extra in h.sorted_extras(pkg_dict.extras, auto_clean=True, subs=rename_fields, exclude=exclude_fields) %}
+    {% for extra in h.sorted_extras(pkg_dict.extras, auto_clean=True) %}
       {% set key, value = extra %}
 
-          <tr rel="dc:relation" resource="_:extra{{ i }}">
+        <tr rel="dc:relation" resource="_:extra{{ i }}">
+          <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
 
-          {% if key == "Author" or key == "Publisher" or key == "Resource Type" %}
-             <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
-               <td class="dataset-details" property="rdf:value">
-             {% for name in h.string_to_json(value)  %}
+          <td class="dataset-details" property="rdf:value">
+          {% if key == "Author1" or key == "Publisher" or key == "Datacite Resource Type" %}
+             {% for name in value.split("|") %}
                   {{ name }}<br>
              {% endfor %}
-             </td>
+          {% elif key == "Metadata Date" or "Temporal Extent" in key %}
+                {% snippet 'snippets/local_friendly_datetime.html', datetime_obj= value %}
           {% elif key == "Dataset Reference Date" %}
-             <th scope="row" class="dataset-label" property="rdfs:label">Publication Date</th>
-             <td class="dataset-details">
-             {% set dataset_reference_date = h.get_publication_date(pkg_dict) %}
-                  {{ h.render_datetime(dataset_reference_date) }}<br>
-             </td>
-           </tr>
-          {% elif key == "Metadata Date" %}
-             <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
-             <td class="dataset-details">
-                  {{ h.render_datetime(value) }}<br>
-             </td>
-           </tr>
+ 		<tr>
+            	    <th scope="row" class="dataset-label">{{ _("Publication Date") }}</th>
+                       {% snippet 'snippets/local_friendly_datetime.html', datetime_obj=value %}
+                    </td>
+               </tr>
+
           {% else %}
-             <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
-             <td class="dataset-details" property="rdf:value">
               {{ value }}
-             </td>
           {% endif %}
-          </tr>
+          </td>
+        </tr>
     {% endfor %}
 
 
