@@ -20,13 +20,13 @@
              <th scope="row" class="dataset-label" property="rdfs:label">Publication Date</th>
              <td class="dataset-details">
              {% set dataset_reference_date = h.get_publication_date(pkg_dict) %}
-                  {{ h.render_datetime(dataset_reference_date) }}<br>
+                 {{ h.render_datetime(dataset_reference_date, date_format='%B %d %Y %I:%M %p', with_hours=True)}}
              </td>
            </tr>
           {% elif key == "Metadata Date" or "Temporal Extent" in key %}
              <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
              <td class="dataset-details">
-                  {{ h.render_datetime(value) }}<br>
+                 {{ h.render_datetime(value, date_format='%B %d %Y %I:%M %p', with_hours=True) }}
              </td>
            </tr>
           {% else %}
