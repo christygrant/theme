@@ -93,18 +93,45 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
 	
         # Add Resource Support Contact field
         # TODO: is this single or multiple? Jira says single
+        # TODO: Not convinced creating the display string here vs in snippet is the right way to go.
+        resourceSupportContactDisplay = ""
+
         resourceSupportIsoPath = './/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString'
-	resourceSupportContactString = ""
+	resourceSupportNameString = ""
         for resourceName in xml_tree.xpath(resourceSupportIsoPath, namespaces=ISO_NAMES):
-	    resourceSupportContactString = resourceName.text
-        package_dict['extras'].append({'key': 'resource-support-contact', 'value': resourceSupportContactString})
+	    resourceSupportNameString = resourceName.text
+        
+        resourceSupportOrgIsoPath = './/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString'
+        resourceSupportOrgString = ""
+        for orgName in xml_tree.xpath(resourceSupportOrgIsoPath, namespaces=ISO_NAMES):
+            resourceSupportOrgString = orgName.text
+
+        if (resourceSupportNameString and resourceSupportOrgString):
+            resourceSupportContactDisplay = resourceSupportNameString + " (" + resourceSupportOrgString + ")"
+        else:
+            resourceSupportContactDisplay = resourceSupportNameString + " " + resourceSupportOrgString 
+
+        package_dict['extras'].append({'key': 'resource_support-contact', 'value': resourceSupportContactDisplay})
 
         # Add Metadata Point of Contact field
+        pointOfContactDisplay = ""
+
         pointOfContactIsoPath = './/gmd:contact/gmd:CI_ResponsibleParty/gmd:individualName/gco:CharacterString'
-	pointOfContactString = ""
+	pointOfContactNameString = ""
         for contactName in xml_tree.xpath(pointOfContactIsoPath, namespaces=ISO_NAMES):
-	    pointOfContactString = contactName.text
-        package_dict['extras'].append({'key': 'metadata-point-of-contact', 'value': pointOfContactString})
+	    pointOfContactNameString = contactName.text
+
+        pointOfContactOrgIsoPath = './/gmd:contact/gmd:CI_ResponsibleParty/gmd:organisationName/gco:CharacterString'
+	pointOfContactOrgString = ""
+        for orgName in xml_tree.xpath(pointOfContactOrgIsoPath, namespaces=ISO_NAMES):
+	    pointOfContactOrgString = orgName.text
+
+        if (pointOfContactNameString and pointOfContactOrgString):
+	   pointOfContactDisplay = pointOfContactNameString + " (" + pointOfContactOrgString + ")"
+        else: 
+	   pointOfContactDisplay = pointOfContactNameString + " " + pointOfContactOrgString
+
+        package_dict['extras'].append({'key': 'metadata-point-of-contact', 'value': pointOfContactDisplay})
 
         #log.debug("START package_dict print:")
         #log.debug(pprint.pformat(package_dict))
