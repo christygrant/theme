@@ -1,6 +1,11 @@
-{% ckan_extends %}
+<section class="additional-info">
+  <h3>{{ _('Additional Info') }}</h3>
+  <table class="table table-striped table-bordered table-condensed">
 
-{% block extras %}
+    <tbody>
+    {% block package_additional_info %}
+
+    {% block extras %}
 
     {% set rename_fields = {'harvest-author':'Author', 'datacite-resource-type':'Resource Type'}  %}
     {% set exclude_fields = ['resource-type', 'spatial_harvester'] %}
@@ -20,7 +25,7 @@
           {% elif "Date" in key or "Temporal Extent" in key %}
              <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
              <td class="dataset-details">
-                 {{ h.render_datetime(value, date_format='%B %d %Y %I:%M %p', with_hours=True) }}
+                 {{ h.render_datetime(value, date_format='%B %d, %Y, %I:%M %p', with_hours=True) }}
              </td>
           {% else %}
              <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
@@ -31,5 +36,8 @@
           </tr>
     {% endfor %}
 
-
-{% endblock %}
+    {% endblock %}
+    {% endblock %}
+    </tbody>
+  </table>
+</section>
