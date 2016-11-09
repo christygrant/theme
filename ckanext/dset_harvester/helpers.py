@@ -36,3 +36,28 @@ def get_publication_date(package):
 	    pub_date = date_dict['value']
     return pub_date
 
+
+def dset_index(extras_tuple):
+    ''' Used for sorting 'extras' : function returns a sorting index for a given (key, value) tuple.
+        If the key is not in the list, it is given an index larger than any in the ordering list.
+    '''
+    displayOrdering = ["Resource Type", "Author", "Publication Date", "Metadata Date", "Publisher",
+                       "Resource Support Contact", "Metadata Support Contact", 
+                       "Topic Category", 
+                       "Temporal Extent Begin", "Temporal Extent End", 
+                       "Bbox North Lat", "Bbox South Lat", "Bbox West Long", "Bbox East Long", 
+                       "Publisher"] 
+    missingKeyIndex = len(displayOrdering) 
+
+    key = extras_tuple[0]
+
+    if key in displayOrdering:
+         keyIndex = displayOrdering.index(key)
+    else:
+         keyIndex = missingKeyIndex
+
+    return keyIndex
+
+
+def dset_sorted_extras(extras):
+    return sorted(extras, key=dset_index)
