@@ -4,7 +4,8 @@
 
     {% set rename_fields = {'harvest-author':'Author', 'datacite-resource-type':'Resource Type'}  %}
     {% set exclude_fields = ['resource-type', 'spatial_harvester'] %}
-    {% for extra in h.sorted_extras(pkg_dict.extras, auto_clean=True, subs=rename_fields, exclude=exclude_fields) %}
+    {% set extras = h.sorted_extras(pkg_dict.extras, auto_clean=True, subs=rename_fields, exclude=exclude_fields) %}
+    {% for extra in h.dset_sorted_extras(extras) %}
       {% set key, value = extra %}
 
           <tr rel="dc:relation" resource="_:extra{{ i }}">
