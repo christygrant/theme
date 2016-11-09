@@ -83,6 +83,15 @@ def getSupportContactString(xml_tree, contactPath):
     return supportContactString
 
 
+def getPublicationDate(dataset_reference_date):
+    publication_date = " "
+    for date_dict in dataset_reference_date:
+        log.debug(pprint.pformat(date_dict))
+        if date_dict['type'] == 'publication':
+            publication_date = date_dict['value']
+    return publication_date
+
+
 
 class Dset_HarvesterPlugin(p.SingletonPlugin):
     p.implements(ISpatialHarvester, inherit=True)
@@ -145,6 +154,10 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         package_dict['extras'].append({'key': 'harvester_source_id', 'value': harvest_object.harvest_source_id})
         package_dict['extras'].append({'key': 'harvester_source_title', 'value': harvest_object.source.title})
 
+        # Add Publication Date field
+        publication_date = getPublicationDate(iso_values['dataset-reference-date'])
+        package_dict['extras'].append({'key': 'publication-date', 'value': publication_date})
+
         # Dump some fields returned as lists as JSON
         #for key in ('dataset-reference-date',):
         #   for extra in package_dict['extras']:
@@ -169,7 +182,6 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
 
         function_names = (
             'string_to_json',
-            'get_publication_date',
             'dset_sorted_extras',
         )
         return _get_module_functions(helpers, function_names)
