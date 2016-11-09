@@ -17,19 +17,11 @@
                   {{ name }}<br>
              {% endfor %}
              </td>
-          {% elif key == "Dataset Reference Date" %}
-             <th scope="row" class="dataset-label" property="rdfs:label">Publication Date</th>
-             <td class="dataset-details">
-             {% set dataset_reference_date = h.get_publication_date(pkg_dict) %}
-                 {{ h.render_datetime(dataset_reference_date, date_format='%B %d %Y %I:%M %p', with_hours=True)}}
-             </td>
-           </tr>
-          {% elif key == "Metadata Date" or "Temporal Extent" in key %}
+          {% elif "Date" in key or "Temporal Extent" in key %}
              <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
              <td class="dataset-details">
                  {{ h.render_datetime(value, date_format='%B %d %Y %I:%M %p', with_hours=True) }}
              </td>
-           </tr>
           {% else %}
              <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
              <td class="dataset-details" property="rdf:value">
