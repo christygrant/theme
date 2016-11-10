@@ -16,3 +16,8 @@
       {% snippet "snippets/organization.html", organization=org, has_context_title=false %}
     {% endif %}
 {% endblock %}
+
+{# Don't show Groups or Activity Stream tabs #}
+{% block content_primary_nav %}
+  {{ h.build_nav_icon('dataset_read', _('Dataset'), id=pkg.name) }}
+{% endblock %}
