@@ -91,6 +91,22 @@ def getPublicationDate(dataset_reference_date):
     return publication_date
 
 
+def getSplitKeywordsGCMD(harvested_keywords):
+    ''' convert something like
+        "EARTH    SCIENCE > ATMOSPHERE > ATMOSPHERIC    ELECTRICITY > ATMOSPHERIC CONDUCTIVITY"
+        into
+        ['Earth Science', 'Atmosphere', 'Atmospheric Electricity', 'Atmospheric Conductivity']
+    '''
+    split_keywords = []
+    for k in harvested_keywords:
+        kk = k.split('>')
+        kk = [k.lower().strip() for k in kk]
+        kk = [' '.join(k.split()) for k in kk]
+        split_keywords.extend(kk)
+    split_keywords = list(set(split_keywords))
+    return split_keywords
+
+
 
 class Dset_HarvesterPlugin(p.SingletonPlugin):
     p.implements(ISpatialHarvester, inherit=True)
@@ -138,10 +154,6 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         pointOfContactString = getSupportContactString(xml_tree, pointOfContactIsoPath)
         package_dict['extras'].append({'key': 'metadata-point-of-contact', 'value': pointOfContactString})
 
-        #log.debug("START package_dict print:")
-        #log.debug(pprint.pformat(package_dict))
-        #log.debug("END package_dict print.")
-
         # Override CKAN resource type with DataCite ResourceType keywords list
 	resourceTypeList = getDataCiteResourceTypes(xml_tree)
         resourceTypeString = json.dumps(resourceTypeList)
@@ -157,7 +169,11 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         publication_date = getPublicationDate(iso_values['dataset-reference-date'])
         package_dict['extras'].append({'key': 'publication-date', 'value': publication_date})
 
-        # Dump some fields returned as lists as JSON (spatial harvester is inconsistent in its output)
+        # Convert GCMD Keywords to split form
+        splitKeywords = getSplitKeywordsGCMD(iso_values.pop('tags'))
+        package_dict['tags'] = [{'name': t} for t in splitKeywords]
+
+        # Convert some harvested fields from lists to JSON (spatial harvester is inconsistent in its output)
         for key in ('topic-category','access-constraints'):
            for extra in package_dict['extras']:
                if extra['key'] == key:
