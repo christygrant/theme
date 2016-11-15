@@ -95,7 +95,7 @@ def getSplitKeywordsGCMD(harvested_keywords):
     ''' convert something like
         "EARTH    SCIENCE > ATMOSPHERE > ATMOSPHERIC    ELECTRICITY > ATMOSPHERIC CONDUCTIVITY"
         into
-        ['Earth Science', 'Atmosphere', 'Atmospheric Electricity', 'Atmospheric Conductivity']
+        ['earth science', 'atmosphere', 'atmospheric electricity', 'atmospheric conductivity']
     '''
     split_keywords = []
     for k in harvested_keywords:
