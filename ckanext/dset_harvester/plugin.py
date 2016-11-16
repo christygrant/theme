@@ -154,10 +154,11 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         pointOfContactString = getSupportContactString(xml_tree, pointOfContactIsoPath)
         package_dict['extras'].append({'key': 'metadata-point-of-contact', 'value': pointOfContactString})
 
-        # Override CKAN resource type with DataCite ResourceType keywords list
+        # Set CKAN Resource Type to first DataCite ResourceType keyword (CKAN only allows one keyword)
 	resourceTypeList = getDataCiteResourceTypes(xml_tree)
-        resourceTypeString = json.dumps(resourceTypeList)
-        package_dict['extras'].append({'key': 'datacite-resource-type', 'value': resourceTypeString})
+        for extra in package_dict['extras']:
+            if extra['key'] == 'resource-type':
+                extra['value'] = resourceTypeList[0]
 	
         # Add Harvester-related values
         harvest_object = data_dict['harvest_object']
