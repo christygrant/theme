@@ -7,15 +7,15 @@
 
     {% block extras %}
 
-    {% set rename_fields = {'harvest-author':'Author', 'datacite-resource-type':'Resource Type'}  %}
-    {% set exclude_fields = ['resource-type', 'spatial_harvester', 'dataset-reference-date', 'responsible-party', 'spatial'] %}
+    {% set rename_fields = {'harvest-author':'Author'}  %}
+    {% set exclude_fields = ['spatial_harvester', 'dataset-reference-date', 'responsible-party', 'spatial'] %}
     {% set extras = h.sorted_extras(pkg_dict.extras, auto_clean=True, subs=rename_fields, exclude=exclude_fields) %}
     {% for extra in h.dset_sorted_extras(extras) %}
       {% set key, value = extra %}
 
         <tr rel="dc:relation" resource="_:extra{{ i }}">
 
-          {% if key in ["Author", "Publisher", "Resource Type", "Topic Category", "Licence", "Access Constraints"] %}
+          {% if key in ["Author", "Publisher", "Topic Category", "Licence", "Access Constraints"] %}
              <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
                <td class="dataset-details" property="rdf:value">
                  {% for name in h.string_to_json(value)  %}
