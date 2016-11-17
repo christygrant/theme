@@ -16,9 +16,15 @@ Example:
   <ul class="resource-list">
      <li class="resource-item">
             <p class="description">
+              {%if name %}
                 {{ name }} <br>
+              {% endif %}
+              {%if email %}
                 {{ email }} <br>
+              {% endif %}
+              {%if org %}
                 {{ org }} <br>
+              {% endif%}
             </p>
      </li>
   </ul>

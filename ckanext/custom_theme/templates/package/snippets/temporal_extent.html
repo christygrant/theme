@@ -11,23 +11,32 @@ Example:
 {% set begin = h.get_pkg_dict_extra(pkg, 'temporal-extent-begin', None) %}
 {% set end = h.get_pkg_dict_extra(pkg, 'temporal-extent-end', None) %}
 <section id="temporal-extent" class="resources">
+{%if begin or end %}
 <h3>{{ _('Temporal Extent') }}</h3>
   <ul class="resource-list">
      <li class="resource-item">
             <p class="description">
 		<table> <tr> <td>
-                Begin:&nbsp; 
-		</td> <td>
-		{{ h.render_datetime(begin, date_format='%B %d, %Y, %I:%M %p', with_hours=True) }} 
-		</td> </tr> <tr> <td> 
-		End:&nbsp;
-		</td> <td>
-		{{ h.render_datetime(end, date_format='%B %d, %Y, %I:%M %p', with_hours=True) }}
-		</td> </table>
+                  {%if begin %}
+                    Begin:&nbsp; 
+		    </td> 
+ 	            <td>
+		    {{ h.render_datetime(begin, date_format='%B %d, %Y, %I:%M %p', with_hours=True) }} 
+                  {% endif %}
+	  	</td> 
+		<tr> <td> 
+                  {%if end %}
+		    End:&nbsp;
+		    </td> <td>
+		    {{ h.render_datetime(end, date_format='%B %d, %Y, %I:%M %p', with_hours=True) }}
+                  {% endif %}
+		</td>
+               </tr> </table>
             </p>
           </li>
         </ul>
 
+{% endif %}
 </section>
 
 
