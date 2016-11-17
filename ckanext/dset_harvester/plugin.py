@@ -143,10 +143,10 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         )
 
         # Examine iso_values if there are authors, just to get a better idea of harvester data structures.
-	if len(authorString) > 1:
-            log.debug("START iso_values print:")
-            log.debug(pprint.pformat(iso_values))
-            log.debug("END iso_values print.")
+	#if len(authorString) > 1:
+            #log.debug("START iso_values print:")
+            #log.debug(pprint.pformat(iso_values))
+            #log.debug("END iso_values print.")
 	
         # Add publisher field
 	publisherList = getNamesByRole(xml_tree, 'publisher', 'gmd:organisationName/gco:CharacterString')
@@ -200,9 +200,9 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
                if extra['key'] == key:
                    extra['value'] = json.dumps(extra['value'])
 	
-        #log.debug("START data_dict print:")
-        #log.debug(pprint.pformat(data_dict))
-        #log.debug("END data_dict print.")
+        log.debug("START data_dict print:")
+        log.debug(pprint.pformat(data_dict))
+        log.debug("END data_dict print.")
         return package_dict
 
     # IConfigurer
