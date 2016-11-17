@@ -200,9 +200,9 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
                if extra['key'] == key:
                    extra['value'] = json.dumps(extra['value'])
 	
-        log.debug("START data_dict print:")
-        log.debug(pprint.pformat(data_dict))
-        log.debug("END data_dict print.")
+        #log.debug("START data_dict print:")
+        #log.debug(pprint.pformat(data_dict))
+        #log.debug("END data_dict print.")
         return package_dict
 
     # IConfigurer
