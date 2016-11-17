@@ -1,0 +1,31 @@
+{#
+Renders a Metadata Source section and links for Download and View Metadata.
+
+pkg - A package object that the resources belong to.
+
+Example:
+
+  {% snippet "package/snippets/resource_support_contact.html", pkg=pkg %}
+
+#}
+{% set name = h.get_pkg_dict_extra(pkg, 'resource-support-name', None) %}
+{% set org = h.get_pkg_dict_extra(pkg, 'resource-support-org', None) %}
+{% set email = h.get_pkg_dict_extra(pkg, 'resource-support-email', None) %}
+<section id="resource-support-contact" class="resources">
+<h3>{{ _('Resource Support Contact') }}</h3>
+  <ul class="resource-list">
+     <li class="resource-item">
+         <strong class="heading">
+             Resource Support Contact
+            </strong>
+            <p class="description">
+                {{ name }} <br>
+                {{ email }} <br>
+                {{ org }} <br>
+            </p>
+          </li>
+        </ul>
+
+</section>
+
+
