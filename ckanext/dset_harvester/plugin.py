@@ -57,11 +57,11 @@ def getDataCiteResourceTypes(xml_tree):
 
 def getSupportContactName(xml_tree, contactPath):
     supportContactElementList = xml_tree.xpath(contactPath, namespaces=ISO_NAMES)
+    individualNameString = ""
     if supportContactElementList:
         supportContactElement = supportContactElementList[0]
 
         individualElementList = supportContactElement.xpath('.//gmd:individualName/gco:CharacterString', namespaces=ISO_NAMES)
-        individualNameString = ""
         if individualElementList:
             individualNameString = individualElementList[0].text
    
@@ -69,11 +69,11 @@ def getSupportContactName(xml_tree, contactPath):
 
 def getSupportContactOrg(xml_tree, contactPath):
     supportContactElementList = xml_tree.xpath(contactPath, namespaces=ISO_NAMES)
+    orgString = ""
     if supportContactElementList:
         supportContactElement = supportContactElementList[0]
 
         orgElementList = supportContactElement.xpath('.//gmd:organisationName/gco:CharacterString', namespaces=ISO_NAMES)
-        orgString = ""
         if orgElementList:
             orgString = orgElementList[0].text
 
@@ -82,10 +82,10 @@ def getSupportContactOrg(xml_tree, contactPath):
 
 def getSupportContactEmail(xml_tree, contactPath):
     supportContactElementList = xml_tree.xpath(contactPath, namespaces=ISO_NAMES)
+    emailString = ""
     if supportContactElementList:
         supportContactElement = supportContactElementList[0]
 
-        emailString = ""
         emailElementList = supportContactElement.xpath('.//gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString', namespaces=ISO_NAMES)
         if emailElementList:
             emailString = emailElementList[0].text
