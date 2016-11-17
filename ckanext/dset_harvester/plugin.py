@@ -96,10 +96,25 @@ def getSupportContactEmail(xml_tree, contactPath):
 def getPublicationDate(dataset_reference_date):
     publication_date = " "
     for date_dict in dataset_reference_date:
-        log.debug(pprint.pformat(date_dict))
         if date_dict['type'] == 'publication':
             publication_date = date_dict['value']
     return publication_date
+
+
+def getSplitKeywordsGCMD(harvested_keywords):
+    ''' convert something like
+        "EARTH    SCIENCE > ATMOSPHERE > ATMOSPHERIC    ELECTRICITY > ATMOSPHERIC CONDUCTIVITY"
+        into
+        ['earth science', 'atmosphere', 'atmospheric electricity', 'atmospheric conductivity']
+    '''
+    split_keywords = []
+    for k in harvested_keywords:
+        kk = k.split('>')
+        kk = [k.lower().strip() for k in kk]
+        kk = [' '.join(k.split()) for k in kk]
+        split_keywords.extend(kk)
+    split_keywords = list(set(split_keywords))
+    return split_keywords
 
 
 
@@ -159,14 +174,11 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         pointOfContactString = pointOfContactName + "(" + pointOfContactOrg + ")"
         package_dict['extras'].append({'key': 'metadata-point-of-contact', 'value': pointOfContactString})
 
-        #log.debug("START package_dict print:")
-        #log.debug(pprint.pformat(package_dict))
-        #log.debug("END package_dict print.")
-
-        # Override CKAN resource type with DataCite ResourceType keywords list
+        # Set CKAN Resource Type to first DataCite ResourceType keyword (CKAN only allows one keyword)
 	resourceTypeList = getDataCiteResourceTypes(xml_tree)
-        resourceTypeString = json.dumps(resourceTypeList)
-        package_dict['extras'].append({'key': 'datacite-resource-type', 'value': resourceTypeString})
+        for extra in package_dict['extras']:
+            if extra['key'] == 'resource-type':
+                extra['value'] = resourceTypeList[0]
 	
         # Add Harvester-related values
         harvest_object = data_dict['harvest_object']
@@ -178,11 +190,15 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         publication_date = getPublicationDate(iso_values['dataset-reference-date'])
         package_dict['extras'].append({'key': 'publication-date', 'value': publication_date})
 
-        # Dump some fields returned as lists as JSON
-        #for key in ('dataset-reference-date',):
-        #   for extra in package_dict['extras']:
-        #       if extra['key'] == key:
-        #           extra['value'] = json.dumps(extra['value'])
+        # Convert GCMD Keywords to split form
+        splitKeywords = getSplitKeywordsGCMD(iso_values.pop('tags'))
+        package_dict['tags'] = [{'name': t} for t in splitKeywords]
+
+        # Convert some harvested fields from lists to JSON (spatial harvester is inconsistent in its output)
+        for key in ('topic-category','access-constraints'):
+           for extra in package_dict['extras']:
+               if extra['key'] == key:
+                   extra['value'] = json.dumps(extra['value'])
 	
         #log.debug("START data_dict print:")
         #log.debug(pprint.pformat(data_dict))
