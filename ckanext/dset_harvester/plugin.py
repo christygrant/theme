@@ -55,32 +55,42 @@ def getDataCiteResourceTypes(xml_tree):
         resourceTypes = [' ']
     return resourceTypes
 
-
-def getSupportContactString(xml_tree, contactPath):
+def getSupportContactName(xml_tree, contactPath):
     supportContactElementList = xml_tree.xpath(contactPath, namespaces=ISO_NAMES)
     if supportContactElementList:
         supportContactElement = supportContactElementList[0]
 
         individualElementList = supportContactElement.xpath('.//gmd:individualName/gco:CharacterString', namespaces=ISO_NAMES)
+        individualNameString = ""
         if individualElementList:
-            individualString = individualElementList[0].text
-        else:
-            individualString = ""
-    
+            individualNameString = individualElementList[0].text
+   
+    return individualNameString
+
+def getSupportContactOrg(xml_tree, contactPath):
+    supportContactElementList = xml_tree.xpath(contactPath, namespaces=ISO_NAMES)
+    if supportContactElementList:
+        supportContactElement = supportContactElementList[0]
+
         orgElementList = supportContactElement.xpath('.//gmd:organisationName/gco:CharacterString', namespaces=ISO_NAMES)
+        orgString = ""
         if orgElementList:
             orgString = orgElementList[0].text
-        else:
-            orgString = ""
-    
-        if (individualString and orgString):
-            supportContactString = individualString + " (" + orgString + ")"
-        else:
-            supportContactString = individualString + " " + orgString
-    else:
-        supportContactString = " "
 
-    return supportContactString
+    return orgString
+
+
+def getSupportContactEmail(xml_tree, contactPath):
+    supportContactElementList = xml_tree.xpath(contactPath, namespaces=ISO_NAMES)
+    if supportContactElementList:
+        supportContactElement = supportContactElementList[0]
+
+        emailString = ""
+        emailElementList = supportContactElement.xpath('.//gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString', namespaces=ISO_NAMES)
+        if emailElementList:
+            emailString = emailElementList[0].text
+	
+    return emailString
 
 
 def getPublicationDate(dataset_reference_date):
@@ -129,14 +139,24 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         package_dict['extras'].append({'key': 'publisher', 'value': publisherString})
 	
         # Add Support Contact fields
-        # TODO: Not convinced creating the display string here vs in snippet is the right way to go.
+        # TODO: Resource Support Contact Object?
 
         resourceSupportIsoPath = './/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact/gmd:CI_ResponsibleParty'
-        resourceSupportString = getSupportContactString(xml_tree, resourceSupportIsoPath)
-        package_dict['extras'].append({'key': 'resource_support-contact', 'value': resourceSupportString})
+        resourceSupportName = getSupportContactName(xml_tree, resourceSupportIsoPath)
+        package_dict['extras'].append({'key': 'resource-support-name', 'value': resourceSupportName})
 
+        resourceSupportOrg = getSupportContactOrg(xml_tree, resourceSupportIsoPath)
+        package_dict['extras'].append({'key': 'resource-support-org', 'value': resourceSupportOrg})
+
+        resourceSupportEmail = getSupportContactEmail(xml_tree, resourceSupportIsoPath)
+        package_dict['extras'].append({'key': 'resource-support-email', 'value': resourceSupportEmail})
+
+        # Metadata point of contact
+	# TODO: don't build string here. Esp check for null org.
         pointOfContactIsoPath = './/gmd:contact/gmd:CI_ResponsibleParty'
-        pointOfContactString = getSupportContactString(xml_tree, pointOfContactIsoPath)
+        pointOfContactName = getSupportContactName(xml_tree, pointOfContactIsoPath)
+        pointOfContactOrg = getSupportContactName(xml_tree, pointOfContactIsoPath)
+        pointOfContactString = pointOfContactName + "(" + pointOfContactOrg + ")"
         package_dict['extras'].append({'key': 'metadata-point-of-contact', 'value': pointOfContactString})
 
         #log.debug("START package_dict print:")
