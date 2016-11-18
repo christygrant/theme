@@ -219,6 +219,7 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         function_names = (
             'string_to_json',
             'dset_sorted_extras',
+            'dset_render_datetime',
         )
         return _get_module_functions(helpers, function_names)
 

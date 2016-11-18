@@ -41,3 +41,16 @@ def dset_index(extras_tuple):
 def dset_sorted_extras(extras):
     return sorted(extras, key=dset_index)
 
+def dset_render_datetime(datetime_, date_format='%B %d, %Y, %I:%M %p', with_hours=True):
+    '''Render a datetime object or timestamp string as a localised date or
+    in the requested format.
+    If timestamp is badly formatted, then THE ORIGNINAL string is returned.
+    Also, default date_format to our preferred format (e.g. September 30, 2000, 08:00 PM)
+    '''
+    rendered_datetime = h.render_datetime(datetime_)
+    log.debug("IN NEW HELPER rendered_datetime = " + rendered_datetime)
+    if not rendered_datetime:
+        return datetime_
+    else:
+        return rendered_datetime
+
