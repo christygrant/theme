@@ -25,7 +25,7 @@
           {% elif "Date" in key or "Temporal Extent" in key %}
              <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
              <td class="dataset-details">
-                 {{ h.render_datetime(value, date_format='%B %d, %Y, %I:%M %p', with_hours=True) }}
+                 {{ h.dset_render_datetime(value, date_format='%B %d, %Y, %I:%M %p', with_hours=True) }}
              </td>
           {% else %}
              <th scope="row" class="dataset-label" property="rdfs:label">{{ _(key) }}</th>
