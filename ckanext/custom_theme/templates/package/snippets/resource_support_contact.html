@@ -12,6 +12,7 @@ Example:
 {% set org = h.get_pkg_dict_extra(pkg, 'resource-support-org', None) %}
 {% set email = h.get_pkg_dict_extra(pkg, 'resource-support-email', None) %}
 <section id="resource-support-contact" class="resources">
+{%if name or email or org %}
 <h3>{{ _('Resource Support Contact') }}</h3>
   <ul class="resource-list">
      <li class="resource-item">
@@ -24,11 +25,11 @@ Example:
               {% endif %}
               {%if org %}
                 {{ org }} <br>
-              {% endif%}
+              {% endif %}
             </p>
      </li>
   </ul>
-
+{% endif %}
 </section>
 
 
