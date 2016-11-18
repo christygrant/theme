@@ -20,14 +20,14 @@ Example:
                     Begin:&nbsp; 
 		    </td> 
  	            <td>
-		    {{ h.render_datetime(begin, date_format='%B %d, %Y, %I:%M %p', with_hours=True) }} {{begin}}
+		    {{ h.dset_render_datetime(begin) }} 
                   {% endif %}
 	  	</td> 
 		<tr> <td> 
                   {%if end %}
 		    End:&nbsp;
 		    </td> <td>
-		    {{ h.render_datetime(end, date_format='%B %d, %Y, %I:%M %p', with_hours=True) }} {{end}}
+		    {{ h.dset_render_datetime(end) }} 
                   {% endif %}
 		</td>
                </tr> </table>
