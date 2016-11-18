@@ -8,27 +8,23 @@ Example:
   _snippet "package/snippets/temporal_extent.html", pkg=pkg %}
 
 #}
-{% set begin = h.get_pkg_dict_extra(pkg, 'temporal-extent-begin', None) %}
-{% set end = h.get_pkg_dict_extra(pkg, 'temporal-extent-end', None) %}
+{% set begin = h.dset_render_datetime(h.get_pkg_dict_extra(pkg, 'temporal-extent-begin', None)) %}
+{% set end = h.dset_render_datetime(h.get_pkg_dict_extra(pkg, 'temporal-extent-end', None)) %}
 <section id="temporal-extent" class="resources">
 {%if begin or end %}
 <h3>{{ _('Temporal Extent') }}</h3>
   <ul class="resource-list">
      <li class="resource-item">
 		<table class="description"> <tr> <td>
-                  {%if begin %}
                     Begin:&nbsp; 
 		    </td> 
  	            <td>
-		    {{ h.dset_render_datetime(begin) }} 
-                  {% endif %}
+		    {{ begin }} 
 	  	</td> 
 		<tr> <td> 
-                  {%if end %}
 		    End:&nbsp;
 		    </td> <td>
-		    {{ h.dset_render_datetime(end) }} 
-                  {% endif %}
+		    {{ end }} 
 		</td>
                </tr> </table>
           </li>
