@@ -5,13 +5,13 @@ pkg - A package object that the resources belong to.
 
 Example:
 
-  _snippet "package/snippets/temporal_extent.html", pkg=pkg %}
+{   _snippet "package/snippets/tempora_html", pkg=pkg %}
 
 #}
-{% set begin = h.dset_render_datetime(h.get_pkg_dict_extra(pkg, 'temporal-extent-begin', None)) %}
-{% set end = h.dset_render_datetime(h.get_pkg_dict_extra(pkg, 'temporal-extent-end', None)) %}
+{% set begin = h.get_pkg_dict_extra(pkg, 'temporal-extent-begin', None) %}
+{% set end = h.get_pkg_dict_extra(pkg, 'temporal-extent-end', None) %}
 <section id="temporal-extent" class="resources">
-{%if begin or end %}
+{%if h.dset_valid_temporal_extent(begin, end) %}
 <h3>{{ _('Temporal Extent') }}</h3>
   <ul class="resource-list">
      <li class="resource-item">
@@ -19,12 +19,12 @@ Example:
                     Begin:&nbsp; 
 		    </td> 
  	            <td>
-		    {{ begin }} 
+                    {{ h.dset_render_datetime(begin) }}
 	  	</td> 
 		<tr> <td> 
 		    End:&nbsp;
 		    </td> <td>
-		    {{ end }} 
+		    {{ h.dset_render_datetime(end) }} 
 		</td>
                </tr> </table>
           </li>
