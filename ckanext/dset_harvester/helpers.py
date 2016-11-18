@@ -54,3 +54,13 @@ def dset_render_datetime(datetime_, date_format='%B %d, %Y, %I:%M %p', with_hour
     else:
         return rendered_datetime
 
+def dset_valid_temporal_extent (begin, end):
+    '''Check if both start and end dates are valid dates
+    '''
+    valid=False
+    if h.render_datetime(begin, date_format='%B %d, %Y, %I:%M %p', with_hours=True):
+        if h.render_datetime(end, date_format='%B %d, %Y, %I:%M %p', with_hours=True):
+            valid=True
+    return valid
+    
+
