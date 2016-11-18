@@ -2,7 +2,7 @@
 
 {% block package_resources %}
     {% snippet "package/snippets/resources_list.html", pkg=pkg, resources=pkg.resources %}
-    {% snippet "package/snippets/metadata_source_list.html", pkg=pkg %}
     {% snippet "package/snippets/resource_support_contact.html", pkg=pkg %}
     {% snippet "package/snippets/temporal_extent.html", pkg=pkg %}
+    {% snippet "package/snippets/metadata_source_list.html", pkg=pkg %}
 {% endblock %}

@@ -15,24 +15,22 @@ Example:
 <h3>{{ _('Temporal Extent') }}</h3>
   <ul class="resource-list">
      <li class="resource-item">
-            <p class="description">
-		<table> <tr> <td>
+		<table class="description"> <tr> <td>
                   {%if begin %}
                     Begin:&nbsp; 
 		    </td> 
  	            <td>
-		    {{ h.render_datetime(begin, date_format='%B %d, %Y, %I:%M %p', with_hours=True) }} 
+		    {{ h.render_datetime(begin, date_format='%B %d, %Y, %I:%M %p', with_hours=True) }} {{begin}}
                   {% endif %}
 	  	</td> 
 		<tr> <td> 
                   {%if end %}
 		    End:&nbsp;
 		    </td> <td>
-		    {{ h.render_datetime(end, date_format='%B %d, %Y, %I:%M %p', with_hours=True) }}
+		    {{ h.render_datetime(end, date_format='%B %d, %Y, %I:%M %p', with_hours=True) }} {{end}}
                   {% endif %}
 		</td>
                </tr> </table>
-            </p>
           </li>
         </ul>
 
