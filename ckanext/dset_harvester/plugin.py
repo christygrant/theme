@@ -161,7 +161,7 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         package_dict['extras'].append({'key': 'resource-support-name', 'value': resourceSupportName})
 
         resourceSupportOrg = getSupportContactOrg(xml_tree, resourceSupportIsoPath)
-        package_dict['extras'].append({'key': 'resource-support-org', 'value': resourceSupportOrg})
+        package_dict['extras'].append({'key': 'resource-support-organization', 'value': resourceSupportOrg})
 
         resourceSupportEmail = getSupportContactEmail(xml_tree, resourceSupportIsoPath)
         package_dict['extras'].append({'key': 'resource-support-email', 'value': resourceSupportEmail})
@@ -169,10 +169,12 @@ class Dset_HarvesterPlugin(p.SingletonPlugin):
         # Metadata point of contact
 	# TODO: don't build string here. Esp check for null org.
         pointOfContactIsoPath = './/gmd:contact/gmd:CI_ResponsibleParty'
+
         pointOfContactName = getSupportContactName(xml_tree, pointOfContactIsoPath)
-        pointOfContactOrg = getSupportContactName(xml_tree, pointOfContactIsoPath)
-        pointOfContactString = pointOfContactName + "(" + pointOfContactOrg + ")"
-        package_dict['extras'].append({'key': 'metadata-point-of-contact', 'value': pointOfContactString})
+        package_dict['extras'].append({'key': 'metadata-point-of-contact-name', 'value': pointOfContactName})
+
+        pointOfContactOrg = getSupportContactOrg(xml_tree, pointOfContactIsoPath)
+        package_dict['extras'].append({'key': 'metadata-point-of-contact-organization', 'value': pointOfContactOrg})
 
         # Set CKAN Resource Type to first DataCite ResourceType keyword (CKAN only allows one keyword)
 	resourceTypeList = getDataCiteResourceTypes(xml_tree)
