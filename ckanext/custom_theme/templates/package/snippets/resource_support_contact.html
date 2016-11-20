@@ -9,7 +9,7 @@ Example:
 
 #}
 {% set name = h.get_pkg_dict_extra(pkg, 'resource-support-name', None) %}
-{% set org = h.get_pkg_dict_extra(pkg, 'resource-support-org', None) %}
+{% set org = h.get_pkg_dict_extra(pkg, 'resource-support-organization', None) %}
 {% set email = h.get_pkg_dict_extra(pkg, 'resource-support-email', None) %}
 <section id="resource-support-contact" class="resources">
 {%if name or email or org %}
