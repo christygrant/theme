@@ -4,6 +4,9 @@ import ckan.plugins.toolkit as tk
 
 import json
 
+
+DSET_DATE_FORMAT='%B %d, %Y, %I:%M %p'
+
 # Debug
 import logging
 import pprint
@@ -41,13 +44,13 @@ def dset_index(extras_tuple):
 def dset_sorted_extras(extras):
     return sorted(extras, key=dset_index)
 
-def dset_render_datetime(datetime_, date_format='%B %d, %Y, %I:%M %p', with_hours=True):
+def dset_render_datetime(datetime_, date_format=DSET_DATE_FORMAT, with_hours=True):
     '''Render a datetime object or timestamp string as a localised date or
     in the requested format.
-    If timestamp is badly formatted, then THE ORIGNINAL string is returned.
+    If timestamp is badly formatted, then THE ORIGINAL string is returned.
     Also, default date_format to our preferred format (e.g. September 30, 2000, 08:00 PM)
     '''
-    rendered_datetime = h.render_datetime(datetime_)
+    rendered_datetime = h.render_datetime(datetime_, date_format, with_hours)
     log.debug("IN NEW HELPER rendered_datetime = " + rendered_datetime)
     if not rendered_datetime:
         return datetime_
@@ -56,11 +59,13 @@ def dset_render_datetime(datetime_, date_format='%B %d, %Y, %I:%M %p', with_hour
 
 def dset_valid_temporal_extent (begin, end):
     '''Check if both start and end dates are valid dates
+       Try to render (doesn't need format to check if it can convert string.  The h.render_datetime returns '' if it can't convert to datetime)
     '''
     valid=False
-    if h.render_datetime(begin, date_format='%B %d, %Y, %I:%M %p', with_hours=True):
-        if h.render_datetime(end, date_format='%B %d, %Y, %I:%M %p', with_hours=True):
+    if h.render_datetime(begin):
+        if h.render_datetime(end):
             valid=True
+    log.debug ("The Temporal extent " + begin + "-" + end + " is " + str(valid))
     return valid
     
 
