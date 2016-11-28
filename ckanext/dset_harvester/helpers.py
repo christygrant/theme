@@ -65,7 +65,8 @@ def dset_valid_temporal_extent (begin, end):
     if h.render_datetime(begin):
         if h.render_datetime(end):
             valid=True
-    log.debug ("The Temporal extent " + begin + "-" + end + " is " + str(valid))
+    # If one of these is NoneType will cause Server Error so don't check in with this on.
+    # log.debug ("The Temporal extent " + begin + "-" + end + " is " + str(valid))
     return valid
     
 
