@@ -1,14 +1,3 @@
-{% ckan_extends %}
-
-{% block home_image_caption %}
-  {{ _("Search and Discover NCAR Data") }}
-{% endblock %}
-
-{# Replace the promoted image. #}
-{% block home_image_content %}
-  <a class="media-image" href="/dataset">
-    <img src="/earthFromSatellite420x220.jpeg" alt="Featured image"
-         width="420" height="220" />
-  </a>
-{% endblock %}
-
+{# 
+    Suppress rendering of the "promoted" box on the home page.
+#}
