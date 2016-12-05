@@ -3,9 +3,8 @@ import ckan.plugins as p
 import ckan.plugins.toolkit as tk
 
 import json
+import dateutil.parser
 
-
-DSET_DATE_FORMAT='%B %d, %Y, %I:%M %p'
 
 # Debug
 import logging
@@ -44,29 +43,29 @@ def dset_index(extras_tuple):
 def dset_sorted_extras(extras):
     return sorted(extras, key=dset_index)
 
-def dset_render_datetime(datetime_, date_format=DSET_DATE_FORMAT, with_hours=True):
-    '''Render a datetime object or timestamp string as a localised date or
-    in the requested format.
-    If timestamp is badly formatted, then THE ORIGINAL string is returned.
-    Also, default date_format to our preferred format (e.g. September 30, 2000, 08:00 PM)
+
+def dset_render_datetime(dateTimeString):
+    '''Render a timestamp string using a preferred format (e.g. September 30, 2000, 08:00 PM)
+       If timestamp is badly formatted, then THE ORIGINAL string is returned.
     '''
-    rendered_datetime = h.render_datetime(datetime_, date_format, with_hours)
-    log.debug("IN NEW HELPER rendered_datetime = " + rendered_datetime)
-    if not rendered_datetime:
-        return datetime_
-    else:
-        return rendered_datetime
+    dateFormat = '%B %d, %Y, %I:%M %p'
+    try:
+        dateTimeObject = dateutil.parser.parse(dateTimeString, ignoretz=True)
+        renderedDateTime = h.render_datetime(dateTimeObject, dateFormat, True)
+    except ValueError:
+        renderedDateTime = dateTimeString
+    return renderedDateTime
+
 
 def dset_valid_temporal_extent (begin, end):
     '''Check if both start and end dates are valid dates
-       Try to render (doesn't need format to check if it can convert string.  The h.render_datetime returns '' if it can't convert to datetime)
     '''
-    valid=False
-    if h.render_datetime(begin):
-        if h.render_datetime(end):
-            valid=True
-    # If one of these is NoneType will cause Server Error so don't check in with this on.
-    # log.debug ("The Temporal extent " + begin + "-" + end + " is " + str(valid))
+    try:
+        dateTimeObject = dateutil.parser.parse(begin, ignoretz=True)
+        dateTimeObject = dateutil.parser.parse(end, ignoretz=True)
+        valid=True
+    except ValueError:
+        valid=False
     return valid
     
 
