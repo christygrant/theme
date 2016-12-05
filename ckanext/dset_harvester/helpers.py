@@ -60,12 +60,15 @@ def dset_render_datetime(dateTimeString):
 def dset_valid_temporal_extent (begin, end):
     '''Check if both start and end dates are valid dates
     '''
-    try:
-        dateTimeObject = dateutil.parser.parse(begin, ignoretz=True)
-        dateTimeObject = dateutil.parser.parse(end, ignoretz=True)
-        valid=True
-    except ValueError:
-        valid=False
+    if begin and end:
+        try:
+            dateTimeObject = dateutil.parser.parse(begin, ignoretz=True)
+            dateTimeObject = dateutil.parser.parse(end, ignoretz=True)
+            valid=True
+        except ValueError:
+            valid=False
+    else:
+        valid = False
     return valid
     
 
