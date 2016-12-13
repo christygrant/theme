@@ -17,7 +17,7 @@ setup(
     # http://packaging.python.org/en/latest/tutorial.html#version
     version='0.0.1',
 
-    description='''NCAR theme''',
+    description='''NCAR theme and DSET customizations of ckanext-spatial harvester''',
     long_description=long_description,
 
     # The project's main homepage.
@@ -49,7 +49,7 @@ setup(
 
 
     # What does your project relate to?
-    keywords='''CKAN NCAR custom theme''',
+    keywords='''CKAN NCAR custom theme spatial harvest ISO19139''',
 
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
@@ -79,20 +79,6 @@ setup(
     # pip to create the appropriate form of executable for the target platform.
     entry_points='''
         [ckan.plugins]
-        custom_theme=ckanext.custom_theme.plugin:Custom_ThemePlugin
-	[babel.extractors]
-	ckan = ckan.lib.extract:extract_ckan
+        dset_harvester=ckanext.dset_harvester.plugin:Dset_HarvesterPlugin
     ''',
-
-    # If you are changing from the default layout of your extension, you may
-    # have to change the message extractors, you can read more about babel
-    # message extraction at
-    # http://babel.pocoo.org/docs/messages/#extraction-method-mapping-and-configuration
-    message_extractors={
-        'ckanext': [
-            ('**.py', 'python', None),
-            ('**.js', 'javascript', None),
-            ('**/templates/**.html', 'ckan', None),
-        ],
-    }
 )
